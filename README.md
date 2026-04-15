@@ -35,8 +35,12 @@ sudo ./adsl_bonding.sh down
 إذا كنت على Windows، شغّل:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\windows_precheck.ps1
+echo $LASTEXITCODE
 ```
 
+- `windows_precheck.ps1` هو فقط للفحص على Windows.
+- `adsl_bonding.sh` لا يعمل مباشرة على Windows PowerShell.
+- أوامر `sudo ./adsl_bonding.sh up` و `sudo ./adsl_bonding.sh down` يجب تشغيلها داخل Linux (أو WSL مع صلاحيات مناسبة).
 - إذا ظهرت نتيجة أن لديك WAN واحد فقط، فهذا يعني لا يمكن عمل Multi-WAN فعليًا من وضعك الحالي.
 - تحتاج على الأقل اتصالين إنترنت مستقلين (مثال: DSL1 + DSL2 أو DSL + 4G).
 
