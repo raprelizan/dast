@@ -7,30 +7,40 @@
 > **مهم:** هذا الحل يرفع السرعة الإجمالية عند وجود عدة تحميلات/اتصالات في نفس الوقت، لكنه غالبًا لا يجمع السرعة لِـ **اتصال واحد فقط** (مثل تنزيل ملف واحد) إلا إذا استخدمت MPTCP أو VPN bonding مع سيرفر خارجي.
 
 ## الملفات
-- `adsl_bonding.sh`: سكربت التفعيل/الإلغاء.
+- `adsl_bonding.sh`: سكربت Linux للتفعيل/الإلغاء.
+- `windows_precheck.ps1`: فحص سريع على Windows لمعرفة هل عندك أكثر من WAN حقيقي قبل محاولة bonding.
 
-## المتطلبات
+## المتطلبات (Linux script)
 - Linux
 - أدوات: `ip`, `nft`, `sysctl`, `awk`
 - صلاحية root
 - واجهتان WAN (مثل `ppp0` و `ppp1`) وواجهة LAN (مثل `eth0`)
 
-## التعديل قبل التشغيل
+## التعديل قبل التشغيل (Linux)
 افتح السكربت وعدّل القيم حسب جهازك:
 - `WAN_IFACES=(ppp0 ppp1)`
 - `LAN_IFACE="eth0"`
 
-## التشغيل
+## التشغيل (Linux)
 ```bash
 sudo ./adsl_bonding.sh up
 ```
 
-## الإيقاف
+## الإيقاف (Linux)
 ```bash
 sudo ./adsl_bonding.sh down
 ```
 
-## كيف يعمل؟
+## فحص البيئة على Windows (قبل أي Bonding)
+إذا كنت على Windows، شغّل:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\windows_precheck.ps1
+```
+
+- إذا ظهرت نتيجة أن لديك WAN واحد فقط، فهذا يعني لا يمكن عمل Multi-WAN فعليًا من وضعك الحالي.
+- تحتاج على الأقل اتصالين إنترنت مستقلين (مثال: DSL1 + DSL2 أو DSL + 4G).
+
+## كيف يعمل سكربت Linux؟
 1. يفعّل التوجيه (`ip_forward`).
 2. ينشئ Route Table مستقل لكل خط ADSL.
 3. يوزع الاتصالات الجديدة عشوائيًا على الخطوط عبر `nftables`.
